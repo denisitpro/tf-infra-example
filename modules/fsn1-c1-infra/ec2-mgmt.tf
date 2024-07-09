@@ -13,15 +13,25 @@ resource "hcloud_server" "c1_infra_mgmt" {
     ignore_changes = [user_data, image]
   }
 
-  firewall_ids = [
-    hcloud_firewall.c1_infra_fw_mgmt.id,
-#     hcloud_firewall.c1_infra_fw_base.id
-  ]
-    public_net {
+#   firewall_ids = [
+#     hcloud_firewall.c1_infra_fw_mgmt.id,
+# #     hcloud_firewall.c1_infra_fw_base.id
+#   ]
+  public_net {
       ipv4 = hcloud_primary_ip.mgmt1_ipv4[count.index].id
       ipv6 = hcloud_primary_ip.mgmt1_ipv6[count.index].id
     }
+  depends_on = [
+    hcloud_primary_ip.mgmt1_ipv4,
+    hcloud_primary_ip.mgmt1_ipv6,
+    hcloud_network_subnet.c1_mgmt_net
+  ]
 
-  depends_on = [hcloud_primary_ip.mgmt1_ipv4, hcloud_primary_ip.mgmt1_ipv6]
+}
 
+resource "hcloud_server_network" "mgmt1_local_ip" {
+  count       = length(hcloud_server.c1_infra_mgmt)
+  server_id   = hcloud_server.c1_infra_mgmt[count.index].id
+  network_id  = hcloud_network.c1_infra_net16.id
+  ip          = cidrhost("10.50.4.0/24", count.index + 4)
 }
