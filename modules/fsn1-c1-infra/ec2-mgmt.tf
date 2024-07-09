@@ -1,8 +1,8 @@
-resource "hcloud_server" "c1_infra_mgmt" {
+resource "hcloud_server" "c1_infra_mgmt1" {
   count       = 1
   name        = "${var.region_code}-${var.stand_name}-mgmt-${format("%02d", count.index + 1)}"
   server_type = "cx22"
-  image       = "ubuntu-22.04"
+  image       = "ubuntu-24.04"
   location    = "fsn1"
   ssh_keys = [
     var.hcloud_ssh_key_id
@@ -30,8 +30,8 @@ resource "hcloud_server" "c1_infra_mgmt" {
 }
 
 resource "hcloud_server_network" "mgmt1_local_ip" {
-  count       = length(hcloud_server.c1_infra_mgmt)
-  server_id   = hcloud_server.c1_infra_mgmt[count.index].id
+  count       = length(hcloud_server.c1_infra_mgmt1)
+  server_id   = hcloud_server.c1_infra_mgmt1[count.index].id
   network_id  = hcloud_network.c1_infra_net16.id
   ip          = cidrhost("10.50.4.0/24", count.index + 4)
 }
