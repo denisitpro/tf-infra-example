@@ -1,5 +1,5 @@
 output "c1_infra_mgmt1" {
-  value = [for instance in hcloud_server.c1_infra_mgmt : {
+  value = [for instance in hcloud_server.c1_infra_mgmt1 : {
     id             = instance.id
     name           = instance.name
     ipv4_address   = instance.ipv4_address
@@ -15,7 +15,7 @@ output "c1_infra_mgmt1_local_ips" {
 
 
 output "c1_infra_db1" {
-  value = [for instance in hcloud_server.c1_infra_db : {
+  value = [for instance in hcloud_server.c1_infra_db1 : {
     id             = instance.id
     name           = instance.name
     ipv4_address   = instance.ipv4_address
